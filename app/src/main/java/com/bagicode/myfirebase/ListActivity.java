@@ -1,11 +1,13 @@
 package com.bagicode.myfirebase;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.bagicode.myfirebase.adapter.RequestAdapterRecyclerView;
 import com.bagicode.myfirebase.model.Requests;
@@ -91,5 +93,11 @@ public class ListActivity extends AppCompatActivity {
             }
         });
 
+        findViewById(R.id.fab_add).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(ListActivity.this, MainActivity.class));
+            }
+        });
     }
 }

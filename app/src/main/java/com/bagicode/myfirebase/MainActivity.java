@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -19,6 +20,9 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText etNama, etEmail, etDesk;
     private ProgressDialog loading;
+    private Button btn_cancel, btn_save;
+
+    private String sPid, sPnama, sPemail, sPdesk;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,11 +31,26 @@ public class MainActivity extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance().getReference();
 
+        sPid = getIntent().getStringExtra("id");
+        sPnama = getIntent().getStringExtra("title");
+        sPemail = getIntent().getStringExtra("email");
+        sPdesk = getIntent().getStringExtra("desk");
+
         etNama = findViewById(R.id.et_name);
         etEmail = findViewById(R.id.et_email);
         etDesk = findViewById(R.id.et_desk);
+        btn_save = findViewById(R.id.btn_save);
+        btn_cancel = findViewById(R.id.btn_cancel);
 
-        findViewById(R.id.btn_save).setOnClickListener(new View.OnClickListener() {
+        if (sPid.equals("")){
+            btn_save.setText("Save");
+            btn_cancel.setText("Cancel");
+        } else {
+            btn_save.setText("Edit");
+            btn_cancel.setText("Delete");
+        }
+
+        btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -39,28 +58,42 @@ public class MainActivity extends AppCompatActivity {
                 String Semail = etEmail.getText().toString();
                 String Sdesk = etDesk.getText().toString();
 
-                if (Snama.equals("")) {
-                    etNama.setError("Silahkan masukkan nama");
-                    etNama.requestFocus();
-                } else if (Semail.equals("")) {
-                    etEmail.setError("Silahkan masukkan email");
-                    etEmail.requestFocus();
-                } else if (Sdesk.equals("")) {
-                    etDesk.setError("Silahkan masukkan desk");
-                    etDesk.requestFocus();
-                } else {
-                    loading = ProgressDialog.show(MainActivity.this,
-                            null,
-                            "Please wait...",
-                            true,
-                            false);
+                if (btn_save.getText().equals("Save")){
+                    // perintah save
 
-                    submitUser(new Requests(
-                            Snama.toLowerCase(),
-                            Semail.toLowerCase(),
-                            Sdesk.toLowerCase()));
+                    if (Snama.equals("")) {
+                        etNama.setError("Silahkan masukkan nama");
+                        etNama.requestFocus();
+                    } else if (Semail.equals("")) {
+                        etEmail.setError("Silahkan masukkan email");
+                        etEmail.requestFocus();
+                    } else if (Sdesk.equals("")) {
+                        etDesk.setError("Silahkan masukkan desk");
+                        etDesk.requestFocus();
+                    } else {
+                        loading = ProgressDialog.show(MainActivity.this,
+                                null,
+                                "Please wait...",
+                                true,
+                                false);
+
+                        submitUser(new Requests(
+                                Snama.toLowerCase(),
+                                Semail.toLowerCase(),
+                                Sdesk.toLowerCase()));
+
+                    }
+                } else {
+                    // perintah edit
 
                 }
+
+            }
+        });
+
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
             }
         });

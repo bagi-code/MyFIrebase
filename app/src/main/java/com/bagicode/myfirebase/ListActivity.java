@@ -3,6 +3,7 @@ package com.bagicode.myfirebase;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -28,6 +29,7 @@ public class ListActivity extends AppCompatActivity {
 
     private RecyclerView rc_list_request;
     private ProgressDialog loading;
+    private FloatingActionButton fab_add;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +39,7 @@ public class ListActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance().getReference();
 
         rc_list_request = findViewById(R.id.rc_list_request);
+        fab_add = findViewById(R.id.fab_add);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         rc_list_request.setLayoutManager(mLayoutManager);
@@ -76,7 +79,7 @@ public class ListActivity extends AppCompatActivity {
                  * Inisialisasi adapter dan data hotel dalam bentuk ArrayList
                  * dan mengeset Adapter ke dalam RecyclerView
                  */
-                requestAdapterRecyclerView = new RequestAdapterRecyclerView(daftarReq);
+                requestAdapterRecyclerView = new RequestAdapterRecyclerView(daftarReq, ListActivity.this);
                 rc_list_request.setAdapter(requestAdapterRecyclerView);
                 loading.dismiss();
             }
@@ -93,10 +96,14 @@ public class ListActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.fab_add).setOnClickListener(new View.OnClickListener() {
+        fab_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(ListActivity.this, MainActivity.class));
+                startActivity(new Intent(ListActivity.this, MainActivity.class)
+                        .putExtra("id", "")
+                        .putExtra("title", "")
+                        .putExtra("email", "")
+                        .putExtra("desk", ""));
             }
         });
     }

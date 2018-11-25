@@ -42,6 +42,10 @@ public class MainActivity extends AppCompatActivity {
         btn_save = findViewById(R.id.btn_save);
         btn_cancel = findViewById(R.id.btn_cancel);
 
+        etNama.setText(sPnama);
+        etEmail.setText(sPemail);
+        etDesk.setText(sPdesk);
+
         if (sPid.equals("")){
             btn_save.setText("Save");
             btn_cancel.setText("Cancel");
@@ -85,7 +89,28 @@ public class MainActivity extends AppCompatActivity {
                     }
                 } else {
                     // perintah edit
+                    if (Snama.equals("")) {
+                        etNama.setError("Silahkan masukkan nama");
+                        etNama.requestFocus();
+                    } else if (Semail.equals("")) {
+                        etEmail.setError("Silahkan masukkan email");
+                        etEmail.requestFocus();
+                    } else if (Sdesk.equals("")) {
+                        etDesk.setError("Silahkan masukkan desk");
+                        etDesk.requestFocus();
+                    } else {
+                        loading = ProgressDialog.show(MainActivity.this,
+                                null,
+                                "Please wait...",
+                                true,
+                                false);
 
+                        editUser(new Requests(
+                                Snama.toLowerCase(),
+                                Semail.toLowerCase(),
+                                Sdesk.toLowerCase()), sPid);
+
+                    }
                 }
 
             }
@@ -95,14 +120,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                if (btn_cancel.getText().equals("Cancel")) {
+                    //tutup page
+                    finish();
+                } else {
+                    // delete
+                }
+
             }
         });
     }
 
     private void submitUser(Requests requests) {
         database.child("Request")
-                .child("request_satu")
-//                .push()
+                .push()
                 .setValue(requests)
                 .addOnSuccessListener(this, new OnSuccessListener<Void>() {
                     @Override
@@ -116,6 +147,29 @@ public class MainActivity extends AppCompatActivity {
 
                         Toast.makeText(MainActivity.this,
                                 "Data Berhasil ditambahkan",
+                                Toast.LENGTH_SHORT).show();
+
+                    }
+
+                });
+    }
+
+    private void editUser(Requests requests, String id) {
+        database.child("Request")
+                .child(id)
+                .setValue(requests)
+                .addOnSuccessListener(this, new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                        loading.dismiss();
+
+                        etNama.setText("");
+                        etEmail.setText("");
+                        etDesk.setText("");
+
+                        Toast.makeText(MainActivity.this,
+                                "Data Berhasil diedit",
                                 Toast.LENGTH_SHORT).show();
 
                     }

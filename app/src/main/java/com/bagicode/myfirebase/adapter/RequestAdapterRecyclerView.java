@@ -57,7 +57,6 @@ public class RequestAdapterRecyclerView extends RecyclerView.Adapter<RequestAdap
             public void onClick(View view) {
 
                 Intent goDetail = new Intent(mActivity, MainActivity.class);
-
                 goDetail.putExtra("id", movie.getKey());
                 goDetail.putExtra("title", movie.getNama());
                 goDetail.putExtra("email", movie.getEmail());
